@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="805082366">
+    <data-source source="LOCAL" name="Data Source" uuid="12f17fbe-5273-4db7-9522-22771194de67">
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost/romanov</jdbc-url>
+      <user-name>romanov</user-name>
+      <user-password>dfd8dfc5dfc7dfcbdfc4dfc5dfdc</user-password>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/../postgresql-9.1-901.jdbc4.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+
