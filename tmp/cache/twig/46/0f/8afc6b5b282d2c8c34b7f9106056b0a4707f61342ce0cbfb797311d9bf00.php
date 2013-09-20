@@ -121,7 +121,7 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
                     <ul class=\"nav pull-right\">
                         <li><a href=\"/\">Сайт</a></li>
                         <li class=\"divider-vertical\"></li>
-                        <li><a href=\"/logout\">Выйти</a></li>
+                        <li><a href=\"/admin/logout\">Выйти</a></li>
                     </ul>
                 </div>
             </div>

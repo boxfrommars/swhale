@@ -11,11 +11,13 @@ use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\MonologServiceProvider;
+use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
 
 class RomanovApplication extends Application {
 
@@ -64,6 +66,31 @@ class RomanovApplication extends Application {
                 $this['logtime']('before controller');
             }
         );
+
+        $this->register(new SecurityServiceProvider(), array(
+            'security.firewalls' => array(
+                'admin' => array(
+                    'pattern' => '^/admin',
+                    'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
+                    'users' => array(
+                        'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
+                    ),
+                    'logout' => array('logout_path' => '/admin/logout'),
+                ),
+            )
+        ));
+        $this->get('/login', function(Request $request) {
+            return $this['twig']->render('login.twig', array(
+                'error'         => $this['security.last_error']($request),
+                'last_username' => $this['session']->get('_security.last_username'),
+            ));
+        });
+        $this->get('/admin/logout', function(Request $request) {
+            return $this['twig']->render('login.twig', array(
+                'error'         => $this['security.last_error']($request),
+                'last_username' => $this['session']->get('_security.last_username'),
+            ));
+        });
 
         $this->after(
             function () {
