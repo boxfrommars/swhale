@@ -3,7 +3,7 @@
  * @author Dmitry Groza <boxfrommars@gmail.com>
  */
 
-namespace Romanov;
+namespace Whale;
 
 use Doctrine\Common\Cache\FilesystemCache;
 use Monolog\Logger;
@@ -19,7 +19,7 @@ use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-class RomanovApplication extends Application {
+class WhaleApplication extends Application {
 
     use Application\UrlGeneratorTrait;
     use Application\MonologTrait;
@@ -61,6 +61,7 @@ class RomanovApplication extends Application {
         $this->register(new TranslationServiceProvider(), array( 'translator.messages' => array()));
         $this->register(new DoctrineServiceProvider(), $this['config']['db']);
 
+
         $this->before(
             function () {
                 $this['logtime']('before controller');
@@ -91,7 +92,9 @@ class RomanovApplication extends Application {
                 'last_username' => $this['session']->get('_security.last_username'),
             ));
         });
-
+        $this['flashbag'] = $this->share(function(){
+            return $this['session']->getFlashBag();
+        });
         $this->after(
             function () {
                 $this['logtime']('after controller');

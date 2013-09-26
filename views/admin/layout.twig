@@ -45,7 +45,13 @@
             padding-right: 15px;
         }
         .btn.action {
-            padding: 1px 8px;
+            padding: 0px 8px;
+        }
+        .table .treetable-active, .table .treetable-active:hover, .table .treetable-active td:hover, .table .treetable-active td {
+            background-color: #007fff !important;
+        }
+        .treetable-active a, .treetable-active a:hover {
+            color: #eee;
         }
     </style>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -55,6 +61,9 @@
     <link rel="shortcut icon" href="/favicon.ico" />
     <script src="/vendor/jquery/jquery-1.9.1.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.js"></script>
+    <link href="/vendor/treetable/jquery.treetable.css" rel="stylesheet" type="text/css" />
+    <link href="/vendor/treetable/jquery.treetable.theme.default.css" rel="stylesheet" type="text/css" />
+    <script src="/vendor/treetable/jquery.treetable.js"></script>
 
     <script src="/js/script.js"></script>
 </head>
@@ -110,15 +119,58 @@
     <div class="container-fluid main">
         <div class="row-fluid">
             <div class="span2" id="app-sidebar">
-                <h2>Страницы</h2>
-                <table class="table table-hover table-striped pages-tree">
+                <h2>&nbsp;</h2>
+                <table class="table table-hover treetable">
                     <tbody>
+                    {% for page in _pages %}
+                        <tr data-tt-id="{{ page.getId }}" data-tt-parent-id="{{ page.getIdParent }}">
+                            <td><a href="{{ path('admin_page_edit', {id: page.getId}) }}">{{ page.getTitle }}</a></td>
+                            <td>
+
+                                <div class="dropdown">
+                                    <a class="btn dropdown-toggle pull-right action edit" data-toggle="dropdown" href="#">
+                                        <i class="icon-edit"></i>
+                                        <i class="caret"></i>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <li><a href="">Подстраницы</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Редактировать</a></li>
+                                        <li class="dropdown-submenu">
+                                            <a href="#">Добавить...</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a tabindex="-1" href="#">Подстраницу</a></li>
+                                                <li><a href="#">Рекомендацию</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a tabindex="-1" href="#">Удалить</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
+            <script>
+                var currentPageId = null;
+
+                $(document).ready(function(){
+                    $('.treetable').treetable({
+                        expandable: true
+                    });
+                    $.each($(".treetable").data("treetable").nodes, function(key, value){
+                        if (currentPageId && $(value).attr('id') == currentPageId) {
+                            $(".treetable").treetable("reveal", value.id);
+                            $('[data-tt-id="' + value.id +  '"]').addClass('treetable-active');
+                        }
+                    });
+                });
+            </script>
             <div class="span9">
                 <div class="row-fluid">
-                    {% for type, messages in flash %}
+                    {% for type, messages in app.flashbag.all %}
                         <div class="alert alert-{{ type }}">
                             <a class="close" data-dismiss="alert" href="#">&times;</a>
                             {% for message in messages %}
@@ -126,16 +178,7 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                    <h2>{{ page.getTitle }}</h2>
-                    <form name="form" method="post" action="" class="form-horizontal" novalidate="novalidate">
-                        {{ form_start(form) }}
-                            {{ form_rest(form) }}
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Отправить</button>
-                                <button type="reset" class="btn btn-secondary">Отмена</button>
-                            </div>
-                        {{ form_end(form) }}
-                    </form>
+                    {{ content|raw }}
                 </div>
             </div>
         </div>

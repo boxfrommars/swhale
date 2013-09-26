@@ -33,7 +33,14 @@ class PageService {
      */
     public function fetchAll() {
         $qb = $this->getQuery();
-        $qb->execute();
+        return $this->fetchQuery($qb);
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Query\QueryBuilder $qb
+     * @return array
+     */
+    public function fetchQuery($qb) {
         $pagesData = $this->getDb()->executeQuery($qb)->fetchAll();
         $pages = array();
         foreach ($pagesData as $pageData) {

@@ -6,31 +6,24 @@
 
 $startTime = microtime(true);
 $loader = require_once __DIR__ . '/../vendor/autoload.php';
-/** @var \Romanov\RomanovApplication|\Doctrine\Common\Cache\Cache[]|\Whale\Page\PageService[]|\Symfony\Component\Form\FormFactory[]|Twig_Environment[] $app */
-$app = new \Romanov\RomanovApplication(array(
-    'starttime' => $startTime,
-    'debug' => true,
-    'tmp_path' => '../tmp',
-    'is_cache' => false,
-    'application_path' => realpath(__DIR__ . '/..'),
-    'config' => array(
-        'db' => array(
-            'db.options' => array(
-                'driver' => 'pdo_pgsql',
-                'host' => 'localhost',
-                'dbname' => 'romanov',
-                'user' => 'romanov',
-                'password' => 'romanov',
-            ),
-        ),
-    ),
-));
+$config = require_once __DIR__ . '/../src/config.php';
+
+/** @var \Whale\WhaleApplication|\Doctrine\Common\Cache\Cache[]|\Whale\Page\PageService[]|\Symfony\Component\Form\FormFactory[]|Twig_Environment[] $app */
+$app = new \Whale\WhaleApplication($config);
 $app->register(new \Whale\Page\PageServiceProvider(), array());
 $app->register(new \Whale\Dict\DictServiceProvider(), array());
 
-
 $app->mount('/admin', new \Romanov\Admin\AdminControllerProvider());
-$pages = $app['page.service']->fetchAll();
+
+$app['logtime']('before user routes');
+
+if ($app['is_cache'] && $app['cache']->contains('pages')) {
+    $pages = $app['cache']->fetch('pages');
+} else {
+    $pages = $app['page.service']->fetchAll();
+    if ($app['is_cache']) $app['cache']->save('pages', $pages);
+}
+
 foreach ($pages as $page) {
     $app->get($page->getUrl(), function() use ($pages, $page, $app) {
         return $app['twig']->render('layout.twig', array(
@@ -38,8 +31,6 @@ foreach ($pages as $page) {
         ));
     });
 }
-
-
 
 $app['logtime']('before run');
 $app->run();

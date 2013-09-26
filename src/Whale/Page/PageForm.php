@@ -106,7 +106,7 @@ class PageForm extends AbstractType {
         $pages = $this->_service->fetchAll();
         $choices = array();
         foreach ($pages as $page) {
-            $choices[$page->getId()] = $page->getTitle();
+            $choices[$page->getId()] = str_repeat('.', 2 * substr_count($page->getPath(), '.')) . $page->getTitle();
         }
 
         return $choices;

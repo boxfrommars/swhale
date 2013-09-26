@@ -66,7 +66,13 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
             padding-right: 15px;
         }
         .btn.action {
-            padding: 1px 8px;
+            padding: 0px 8px;
+        }
+        .table .treetable-active, .table .treetable-active:hover, .table .treetable-active td:hover, .table .treetable-active td {
+            background-color: #007fff !important;
+        }
+        .treetable-active a, .treetable-active a:hover {
+            color: #eee;
         }
     </style>
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -76,6 +82,9 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
     <link rel=\"shortcut icon\" href=\"/favicon.ico\" />
     <script src=\"/vendor/jquery/jquery-1.9.1.js\"></script>
     <script src=\"/vendor/bootstrap/js/bootstrap.js\"></script>
+    <link href=\"/vendor/treetable/jquery.treetable.css\" rel=\"stylesheet\" type=\"text/css\" />
+    <link href=\"/vendor/treetable/jquery.treetable.theme.default.css\" rel=\"stylesheet\" type=\"text/css\" />
+    <script src=\"/vendor/treetable/jquery.treetable.js\"></script>
 
     <script src=\"/js/script.js\"></script>
 </head>
@@ -131,30 +140,92 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
     <div class=\"container-fluid main\">
         <div class=\"row-fluid\">
             <div class=\"span2\" id=\"app-sidebar\">
-                <h2>Страницы</h2>
-                <table class=\"table table-hover table-striped pages-tree\">
+                <h2>&nbsp;</h2>
+                <table class=\"table table-hover treetable\">
                     <tbody>
-                    </tbody>
+                    ";
+        // line 125
+        $context['_parent'] = (array) $context;
+        $context['_seq'] = twig_ensure_traversable((isset($context["_pages"]) ? $context["_pages"] : $this->getContext($context, "_pages")));
+        foreach ($context['_seq'] as $context["_key"] => $context["page"]) {
+            // line 126
+            echo "                        <tr data-tt-id=\"";
+            echo twig_escape_filter($this->env, $this->getAttribute((isset($context["page"]) ? $context["page"] : $this->getContext($context, "page")), "getId"), "html", null, true);
+            echo "\" data-tt-parent-id=\"";
+            echo twig_escape_filter($this->env, $this->getAttribute((isset($context["page"]) ? $context["page"] : $this->getContext($context, "page")), "getIdParent"), "html", null, true);
+            echo "\">
+                            <td><a href=\"";
+            // line 127
+            echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("admin_page_edit", array("id" => $this->getAttribute((isset($context["page"]) ? $context["page"] : $this->getContext($context, "page")), "getId"))), "html", null, true);
+            echo "\">";
+            echo twig_escape_filter($this->env, $this->getAttribute((isset($context["page"]) ? $context["page"] : $this->getContext($context, "page")), "getTitle"), "html", null, true);
+            echo "</a></td>
+                            <td>
+
+                                <div class=\"dropdown\">
+                                    <a class=\"btn dropdown-toggle pull-right action edit\" data-toggle=\"dropdown\" href=\"#\">
+                                        <i class=\"icon-edit\"></i>
+                                        <i class=\"caret\"></i>
+                                    </a>
+                                    <ul class=\"dropdown-menu\" role=\"menu\" aria-labelledby=\"dLabel\">
+                                        <li><a href=\"\">Подстраницы</a></li>
+                                        <li class=\"divider\"></li>
+                                        <li><a href=\"#\">Редактировать</a></li>
+                                        <li class=\"dropdown-submenu\">
+                                            <a href=\"#\">Добавить...</a>
+                                            <ul class=\"dropdown-menu\">
+                                                <li><a tabindex=\"-1\" href=\"#\">Подстраницу</a></li>
+                                                <li><a href=\"#\">Рекомендацию</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class=\"divider\"></li>
+                                        <li><a tabindex=\"-1\" href=\"#\">Удалить</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    ";
+        }
+        $_parent = $context['_parent'];
+        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['page'], $context['_parent'], $context['loop']);
+        $context = array_intersect_key($context, $_parent) + $_parent;
+        // line 153
+        echo "                    </tbody>
                 </table>
             </div>
+            <script>
+                var currentPageId = null;
+
+                \$(document).ready(function(){
+                    \$('.treetable').treetable({
+                        expandable: true
+                    });
+                    \$.each(\$(\".treetable\").data(\"treetable\").nodes, function(key, value){
+                        if (currentPageId && \$(value).attr('id') == currentPageId) {
+                            \$(\".treetable\").treetable(\"reveal\", value.id);
+                            \$('[data-tt-id=\"' + value.id +  '\"]').addClass('treetable-active');
+                        }
+                    });
+                });
+            </script>
             <div class=\"span9\">
                 <div class=\"row-fluid\">
                     ";
-        // line 121
+        // line 173
         $context['_parent'] = (array) $context;
-        $context['_seq'] = twig_ensure_traversable((isset($context["flash"]) ? $context["flash"] : $this->getContext($context, "flash")));
+        $context['_seq'] = twig_ensure_traversable($this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : $this->getContext($context, "app")), "flashbag"), "all"));
         foreach ($context['_seq'] as $context["type"] => $context["messages"]) {
-            // line 122
+            // line 174
             echo "                        <div class=\"alert alert-";
             echo twig_escape_filter($this->env, (isset($context["type"]) ? $context["type"] : $this->getContext($context, "type")), "html", null, true);
             echo "\">
                             <a class=\"close\" data-dismiss=\"alert\" href=\"#\">&times;</a>
                             ";
-            // line 124
+            // line 176
             $context['_parent'] = (array) $context;
             $context['_seq'] = twig_ensure_traversable((isset($context["messages"]) ? $context["messages"] : $this->getContext($context, "messages")));
             foreach ($context['_seq'] as $context["_key"] => $context["message"]) {
-                // line 125
+                // line 177
                 echo "                                ";
                 echo twig_escape_filter($this->env, (isset($context["message"]) ? $context["message"] : $this->getContext($context, "message")), "html", null, true);
                 echo "<br />
@@ -163,35 +234,17 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['message'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 127
+            // line 179
             echo "                        </div>
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_iterated'], $context['type'], $context['messages'], $context['_parent'], $context['loop']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 129
-        echo "                    <h2>";
-        echo twig_escape_filter($this->env, $this->getAttribute((isset($context["page"]) ? $context["page"] : $this->getContext($context, "page")), "getTitle"), "html", null, true);
-        echo "</h2>
-                    <form name=\"form\" method=\"post\" action=\"\" class=\"form-horizontal\" novalidate=\"novalidate\">
-                        ";
-        // line 131
-        echo         $this->env->getExtension('form')->renderer->renderBlock((isset($context["form"]) ? $context["form"] : $this->getContext($context, "form")), 'form_start');
+        // line 181
+        echo "                    ";
+        echo (isset($context["content"]) ? $context["content"] : $this->getContext($context, "content"));
         echo "
-                            ";
-        // line 132
-        echo $this->env->getExtension('form')->renderer->searchAndRenderBlock((isset($context["form"]) ? $context["form"] : $this->getContext($context, "form")), 'rest');
-        echo "
-                            <div class=\"form-actions\">
-                                <button type=\"submit\" class=\"btn btn-primary\">Отправить</button>
-                                <button type=\"reset\" class=\"btn btn-secondary\">Отмена</button>
-                            </div>
-                        ";
-        // line 137
-        echo         $this->env->getExtension('form')->renderer->renderBlock((isset($context["form"]) ? $context["form"] : $this->getContext($context, "form")), 'form_end');
-        echo "
-                    </form>
                 </div>
             </div>
         </div>
@@ -219,6 +272,6 @@ class __TwigTemplate_460f8afc6b5b282d2c8c34b7f9106056b0a4707f61342ce0cbfb797311d
 
     public function getDebugInfo()
     {
-        return array (  192 => 137,  184 => 132,  180 => 131,  174 => 129,  167 => 127,  158 => 125,  154 => 124,  148 => 122,  144 => 121,  22 => 1,);
+        return array (  245 => 181,  238 => 179,  229 => 177,  225 => 176,  219 => 174,  215 => 173,  193 => 153,  159 => 127,  152 => 126,  148 => 125,  22 => 1,);
     }
 }
