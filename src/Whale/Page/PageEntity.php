@@ -10,8 +10,6 @@ use Whale\Db\Entity;
 class PageEntity extends Entity
 {
     /** @var int */
-    protected $_id;
-    /** @var int */
     protected $_order;
 
     /** @var string */
@@ -119,22 +117,6 @@ class PageEntity extends Entity
     public function setEntity($entity)
     {
         $this->_entity = $entity;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->_id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->_id = $id;
     }
 
     /**

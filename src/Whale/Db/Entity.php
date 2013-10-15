@@ -9,6 +9,9 @@ use Whale\System;
 
 class Entity {
 
+    /** @var int */
+    protected $_id;
+
     protected $_dbFields = array();
 
     public function __construct($data = array()){
@@ -36,6 +39,23 @@ class Entity {
             );
         }
         return $raw;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->_id = $id;
     }
 
     /**

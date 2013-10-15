@@ -5,30 +5,9 @@
 
 namespace Whale\Page;
 
-use Doctrine\DBAL\Connection;
+use Whale\Db\EntityService;
 
-class PageService {
-
-    /** @var  Connection */
-    protected $_db;
-
-    /** @var string table name */
-    protected $_name = 'page';
-
-    protected $_serviceName = 'page';
-
-    /** @var string table sequence */
-    protected $_seq = 'page_id_seq';
-
-    /**
-     * @param Connection $db
-     * @param array $options
-     */
-    public function __construct($db, $options = array()) {
-        $this->setDb($db);
-        if (array_key_exists('name', $options)) $this->setName($options['name']);
-        if (array_key_exists('seq', $options)) $this->setSeq($options['seq']);
-    }
+class PageService extends EntityService {
 
     /**
      * @return PageEntity[]
@@ -46,7 +25,7 @@ class PageService {
         $pagesData = $this->getDb()->executeQuery($qb)->fetchAll();
         $pages = array();
         foreach ($pagesData as $pageData) {
-            $pages[] = $this->_createEntity($pageData);
+            $pages[] = $this->createEntity($pageData);
         }
         return $pages;
     }
@@ -72,31 +51,15 @@ class PageService {
         $qb = $this->getQuery();
         $qb->add('where', 'p.id = :id');
         $pageData = $this->getDb()->executeQuery($qb, array('id' => $id))->fetch();;
-        return ($pageData === false) ? false : $this->_createEntity($pageData);
+        return ($pageData === false) ? false : $this->createEntity($pageData);
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return PageEntity
      */
-    protected function _createEntity($data) {
+    public function createEntity($data = array()) {
         return new PageEntity($data);
-    }
-
-    /**
-     * @param PageEntity $page
-     */
-    public function insert($page) {
-        $data = array();
-        $types = array();
-
-        foreach($page->raw() as $fieldName => $field) {
-            $data[$fieldName] = $field['value'];
-            $types[$fieldName] = $field['type'];
-        }
-
-        $this->getDb()->insert($this->getName(), $data, $types);
-        $page->setId($this->_db->lastInsertId($this->getSeq()));
     }
 
     /**
@@ -120,82 +83,9 @@ class PageService {
         null === $page->getId() ? $this->insert($page) : $this->update($page);
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->_name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->_name;
-    }
-
-    /**
-     * @param string $seq table sequence
-     */
-    public function setSeq($seq)
-    {
-        $this->_seq = $seq;
-    }
-
-    /**
-     * @return string table sequence
-     */
-    public function getSeq()
-    {
-        return $this->_seq;
-    }
-
-    /**
-     * @param Connection $db
-     */
-    public function setDb($db)
-    {
-        $this->_db = $db;
-    }
-
-    /**
-     * @return Connection
-     */
-    public function getDb()
-    {
-        return $this->_db;
-    }
 
     public function getForm()
     {
         return new PageForm($this);
     }
-
-    /**
-     * @param array $params
-     * @return PageEntity
-     */
-    public function getEntity($params = array())
-    {
-        return new PageEntity($params);
-    }
-
-    /**
-     * @param string $serviceName
-     */
-    public function setServiceName($serviceName)
-    {
-        $this->_serviceName = $serviceName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceName()
-    {
-        return $this->_serviceName;
-    }
-
 }

@@ -37,7 +37,7 @@ class AdminControllerProvider implements ControllerProviderInterface {
         $service = $app['page.service'];
 
         $processPage = function(Request $request, $id = null, $params = array()) use ($app, $service) {
-            $page = ($id === null) ? $service->getEntity($params) : $service->fetch($id);
+            $page = ($id === null) ? $service->createEntity($params) : $service->fetch($id);
 
             if ($page === false) $app->abort('404', "the entity (id={$id}) you are looking for could not be found");
 
