@@ -15,6 +15,8 @@ class PageService {
     /** @var string table name */
     protected $_name = 'page';
 
+    protected $_serviceName = 'page';
+
     /** @var string table sequence */
     protected $_seq = 'page_id_seq';
 
@@ -164,6 +166,36 @@ class PageService {
     public function getDb()
     {
         return $this->_db;
+    }
+
+    public function getForm()
+    {
+        return new PageForm($this);
+    }
+
+    /**
+     * @param array $params
+     * @return PageEntity
+     */
+    public function getEntity($params = array())
+    {
+        return new PageEntity($params);
+    }
+
+    /**
+     * @param string $serviceName
+     */
+    public function setServiceName($serviceName)
+    {
+        $this->_serviceName = $serviceName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceName()
+    {
+        return $this->_serviceName;
     }
 
 }

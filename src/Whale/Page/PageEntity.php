@@ -3,34 +3,11 @@
  * @author Dmitry Groza <boxfrommars@gmail.com>
  */
 
-/*
-  "id" BIGSERIAL NOT NULL,
-  "is_published" BOOL DEFAULT 'f',
-
-  "title" VARCHAR(255) NOT NULL,
-  "content" TEXT,
-
-  "page_url" VARCHAR(255),
-  "page_title" VARCHAR (255),
-  "page_description" TEXT,
-  "page_keywords" TEXT,
-  "order" INT DEFAULT 0,
-
-  "name" VARCHAR(255) UNIQUE,
-
-  "id_parent" BIGINT REFERENCES "page" ("id")  ON DELETE CASCADE,
-  "path" LTREE UNIQUE,
-  "entity" VARCHAR(255),
-
-  "created_at" TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NOW(),
-  "updated_at" TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NOW(),
-*/
 namespace Whale\Page;
 
-use Doctrine\DBAL\Types\BooleanType;
-use Whale\System;
+use Whale\Db\Entity;
 
-class PageEntity
+class PageEntity extends Entity
 {
     /** @var int */
     protected $_id;
@@ -95,50 +72,6 @@ class PageEntity
         'created_at',
         'updated_at'
     );
-
-
-    public function __construct($data = array()){
-        foreach ($data as $name => $value) {
-            $method = 'set' . System::toCamelCase($name);
-            $this->$method($value);
-        }
-    }
-
-    public function raw(){
-        $raw = array();
-        foreach ($this->getDbFields() as $field) {
-            if (!is_array($field)) {
-                $field = array(
-                    'name' => $field,
-                    'type' => \PDO::PARAM_STR,
-                );
-            }
-
-            $method = 'get' . System::toCamelCase($field['name']);
-
-            $raw[$field['name']] = array(
-                'value' => $this->$method(),
-                'type' => $field['type']
-            );
-        }
-        return $raw;
-    }
-
-    /**
-     * @param array $dbFields
-     */
-    public function setDbFields($dbFields)
-    {
-        $this->_dbFields = $dbFields;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDbFields()
-    {
-        return $this->_dbFields;
-    }
 
     /**
      * @return string
