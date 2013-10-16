@@ -11,8 +11,7 @@
         "symfony/translation": "~2.3",
         "symfony/locale": "~2.3",
         "symfony/console": "~2.3",
-        "symfony/security": "~2.3",
-        "dflydev/doctrine-orm-service-provider": "1.0.*@dev"
+        "symfony/security": "~2.3"
     },
     "minimum-stability": "dev",
     "autoload": {
