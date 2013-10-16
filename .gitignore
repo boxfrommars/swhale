@@ -2,6 +2,7 @@
 /.buildpath
 /.project
 /nbproject
+/composer.lock
 /tests/coverage
 /tests/reports
 /tmp
