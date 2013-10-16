@@ -11,6 +11,7 @@ use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
 use Silex\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Whale\Db\EntityService;
 use Whale\Page\PageService;
 
 class AdminControllerProvider implements ControllerProviderInterface {
@@ -33,7 +34,7 @@ class AdminControllerProvider implements ControllerProviderInterface {
             ));
         });
 
-        /** @var PageService $service */
+        /** @var EntityService $service */
         $service = $app['page.service'];
 
         $processPage = function(Request $request, $id = null, $params = array()) use ($app, $service) {

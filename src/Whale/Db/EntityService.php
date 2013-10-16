@@ -6,24 +6,26 @@
 namespace Whale\Db;
 
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\ResolvedFormTypeInterface;
 
-class EntityService {
+abstract class EntityService
+{
     /** @var  Connection */
     protected $_db;
-
     /** @var string table name */
-    protected $_name = 'page';
-
-    protected $_serviceName = 'page';
-
+    protected $_name;
+    /** @var string */
+    protected $_serviceName;
     /** @var string table sequence */
-    protected $_seq = 'page_id_seq';
+    protected $_seq;
 
     /**
      * @param Connection $db
      * @param array $options
      */
-    public function __construct($db, $options = array()) {
+    public function __construct($db, $options = array())
+    {
         $this->setDb($db);
         if (array_key_exists('name', $options)) $this->setName($options['name']);
         if (array_key_exists('seq', $options)) $this->setSeq($options['seq']);
@@ -31,12 +33,22 @@ class EntityService {
 
     /**
      * @param Entity $entity
+     * @return void
      */
-    public function insert($entity) {
+    public function save($entity)
+    {
+        null === $entity->getId() ? $this->insert($entity) : $this->update($entity);
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    public function insert($entity)
+    {
         $data = array();
         $types = array();
 
-        foreach($entity->raw() as $fieldName => $field) {
+        foreach ($entity->raw() as $fieldName => $field) {
             $data[$fieldName] = $field['value'];
             $types[$fieldName] = $field['type'];
         }
@@ -46,35 +58,43 @@ class EntityService {
     }
 
     /**
-     * @param string $name
+     * @param Entity $entity
      */
-    public function setName($name)
+    public function update($entity)
     {
-        $this->_name = $name;
+        $data = array();
+        $types = array();
+
+        foreach ($entity->raw() as $fieldName => $field) {
+            $data[$fieldName] = $field['value'];
+            $types[$fieldName] = $field['type'];
+        }
+        $this->getDb()->update($this->getName(), $data, array('id' => $entity->getId()), $types);
     }
 
     /**
-     * @return string
+     * @return FormTypeInterface|ResolvedFormTypeInterface|string
      */
-    public function getName()
-    {
-        return $this->_name;
-    }
+    public abstract function getForm();
 
     /**
-     * @param string $seq table sequence
+     * @param array $data
+     * @return Entity
      */
-    public function setSeq($seq)
-    {
-        $this->_seq = $seq;
-    }
+    public abstract function createEntity($data = array());
 
     /**
-     * @return string table sequence
+     * @param $id
+     * @return Entity
      */
-    public function getSeq()
+    public abstract function fetch($id);
+
+    /**
+     * @return Connection
+     */
+    public function getDb()
     {
-        return $this->_seq;
+        return $this->_db;
     }
 
     /**
@@ -86,19 +106,35 @@ class EntityService {
     }
 
     /**
-     * @return Connection
+     * @return string
      */
-    public function getDb()
+    public function getName()
     {
-        return $this->_db;
+        return $this->_name;
     }
 
     /**
-     * @param string $serviceName
+     * @param string $name
      */
-    public function setServiceName($serviceName)
+    public function setName($name)
     {
-        $this->_serviceName = $serviceName;
+        $this->_name = $name;
+    }
+
+    /**
+     * @return string table sequence
+     */
+    public function getSeq()
+    {
+        return $this->_seq;
+    }
+
+    /**
+     * @param string $seq table sequence
+     */
+    public function setSeq($seq)
+    {
+        $this->_seq = $seq;
     }
 
     /**
@@ -107,5 +143,13 @@ class EntityService {
     public function getServiceName()
     {
         return $this->_serviceName;
+    }
+
+    /**
+     * @param string $serviceName
+     */
+    public function setServiceName($serviceName)
+    {
+        $this->_serviceName = $serviceName;
     }
 } 

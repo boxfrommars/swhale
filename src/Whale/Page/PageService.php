@@ -9,6 +9,14 @@ use Whale\Db\EntityService;
 
 class PageService extends EntityService {
 
+    /** @var string table name */
+    protected $_name = 'page';
+
+    protected $_serviceName = 'page';
+
+    /** @var string table sequence */
+    protected $_seq = 'page_id_seq';
+
     /**
      * @return PageEntity[]
      */
@@ -63,27 +71,8 @@ class PageService extends EntityService {
     }
 
     /**
-     * @param PageEntity $page
+     * @return PageForm
      */
-    public function update($page) {
-        $data = array();
-        $types = array();
-
-        foreach($page->raw() as $fieldName => $field) {
-            $data[$fieldName] = $field['value'];
-            $types[$fieldName] = $field['type'];
-        }
-        $this->getDb()->update($this->getName(), $data, array('id' => $page->getId()), $types);
-    }
-
-    /**
-     * @param PageEntity $page
-     */
-    public function save($page) {
-        null === $page->getId() ? $this->insert($page) : $this->update($page);
-    }
-
-
     public function getForm()
     {
         return new PageForm($this);

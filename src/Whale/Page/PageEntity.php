@@ -6,21 +6,20 @@
 namespace Whale\Page;
 
 use Whale\Db\Entity;
+use Whale\Db\Traits\ContentTrait;
+use Whale\Db\Traits\OrderTrait;
+use Whale\Db\Traits\ParentTrait;
+use Whale\Db\Traits\PublishedTrait;
+use Whale\Db\Traits\TimestampableTrait;
 
 class PageEntity extends Entity
 {
-    /** @var int */
-    protected $_order;
+    use ParentTrait;
+    use TimestampableTrait;
+    use ContentTrait;
+    use PublishedTrait;
+    use OrderTrait;
 
-    /** @var string */
-    protected $_title;
-    /** @var string */
-    protected $_content;
-    /** @var bool */
-    protected $_isPublished;
-
-    /** @var int */
-    protected $_idParent;
     /** @var string */
     protected $_name;
     /** @var string */
@@ -38,11 +37,6 @@ class PageEntity extends Entity
     protected $_pageDescription;
     /** @var string */
     protected $_pageKeywords;
-
-    /** @var string */
-    protected $_createdAt;
-    /** @var string */
-    protected $_updatedAt;
 
     protected $_dbFields = array(
         array(
@@ -70,39 +64,6 @@ class PageEntity extends Entity
         'created_at',
         'updated_at'
     );
-
-    /**
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->_content;
-    }
-
-    /**
-     * @param string $content
-     */
-    public function setContent($content)
-    {
-        $this->_content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAt()
-    {
-        return $this->_createdAt;
-    }
-
-    /**
-     * @param string $createdAt
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->_createdAt = $createdAt;
-    }
-
     /**
      * @return string
      */
@@ -120,38 +81,6 @@ class PageEntity extends Entity
     }
 
     /**
-     * @return int
-     */
-    public function getIdParent()
-    {
-        return $this->_idParent;
-    }
-
-    /**
-     * @param int $idParent
-     */
-    public function setIdParent($idParent)
-    {
-        $this->_idParent = $idParent;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsPublished()
-    {
-        return $this->_isPublished;
-    }
-
-    /**
-     * @param boolean $isPublished
-     */
-    public function setIsPublished($isPublished)
-    {
-        $this->_isPublished = (bool) $isPublished;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -165,22 +94,6 @@ class PageEntity extends Entity
     public function setName($name)
     {
         $this->_name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrder()
-    {
-        return $this->_order;
-    }
-
-    /**
-     * @param int $order
-     */
-    public function setOrder($order)
-    {
-        $this->_order = $order;
     }
 
     /**
@@ -263,37 +176,6 @@ class PageEntity extends Entity
         $this->_path = $path;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->_title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->_title = $title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedAt()
-    {
-        return $this->_updatedAt;
-    }
-
-    /**
-     * @param string $updatedAt
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->_updatedAt = $updatedAt;
-    }
 
     /**
      * @return string
