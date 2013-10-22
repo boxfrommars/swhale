@@ -3,7 +3,7 @@
 
 $loader = require_once __DIR__ . '/vendor/autoload.php';
 
-use Romanov\Commands\GreetCommand;
+use Whale\Commands\GreetCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();

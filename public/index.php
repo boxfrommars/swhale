@@ -12,8 +12,7 @@ $config = require_once __DIR__ . '/../src/config.php';
 $app = new \Whale\WhaleApplication($config);
 $app->register(new \Whale\Page\PageServiceProvider(), array());
 $app->register(new \Whale\Dict\DictServiceProvider(), array());
-
-$app->mount('/admin', new \Romanov\Admin\AdminControllerProvider());
+$app->mount('/admin/page', new \Whale\Page\PageControllerProvider($app['page.service']));
 
 $app['logtime']('before user routes');
 
@@ -25,6 +24,7 @@ if ($app['is_cache'] && $app['cache']->contains('pages')) {
 }
 
 foreach ($pages as $page) {
+    /** @var \Whale\Page\PageEntity $page */
     $app->get($page->getUrl(), function() use ($pages, $page, $app) {
         return $app['twig']->render('layout.twig', array(
             'content' => $page->getTitle(),

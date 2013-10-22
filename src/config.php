@@ -15,17 +15,5 @@ return array(
                 'password' => 'romanov',
             ),
         ),
-        'orm' => array(
-            "orm.proxies_dir" => "/path/to/proxies",
-            "orm.em.options" => array(
-                "mappings" => array(
-                    array(
-                        "type" => "annotation",
-                        "namespace" => 'Whale\Entity',
-                        "path" => realpath(__DIR__ . '/..') . '/src/Whale/Entity',
-                    ),
-                ),
-            ),
-        ),
     ),
 );
