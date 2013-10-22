@@ -1,6 +1,7 @@
 {
     "require": {
         "silex/silex": "1.*",
+        "boxfrommars/whale": "dev-master",
         "monolog/monolog": "1.6.*@dev",
         "twig/twig": ">=1.8,<2.0-dev",
         "symfony/twig-bridge": "~2.3",
@@ -13,11 +14,16 @@
         "symfony/console": "~2.3",
         "symfony/security": "~2.3"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/boxfrommars/whale"
+        }
+    ],
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
-            "Romanov": "src/",
-            "Whale": "src/"
+            "Romanov": "src/"
         }
     }
 }

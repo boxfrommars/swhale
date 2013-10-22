@@ -11,9 +11,6 @@ class __TwigTemplate_2b1b2774ffff67ba91982378e7a6fd8578c0de9cfd14091f5e33252dccc
 
         $this->blocks = array(
         );
-
-        $this->macros = array(
-        );
     }
 
     protected function doDisplay(array $context, array $blocks = array())
@@ -158,6 +155,6 @@ class __TwigTemplate_2b1b2774ffff67ba91982378e7a6fd8578c0de9cfd14091f5e33252dccc
 
     public function getDebugInfo()
     {
-        return array (  117 => 87,  110 => 83,  106 => 82,  101 => 79,  22 => 1,);
+        return array (  114 => 87,  107 => 83,  103 => 82,  98 => 79,  19 => 1,);
     }
 }
