@@ -11,7 +11,8 @@ $config = require_once __DIR__ . '/../src/config.php';
 /** @var \Whale\WhaleApplication|\Doctrine\Common\Cache\Cache[]|\Whale\Page\PageService[]|\Symfony\Component\Form\FormFactory[]|Twig_Environment[] $app */
 $app = new \Whale\WhaleApplication($config);
 $app->register(new \Whale\Page\PageServiceProvider(), array());
-$app->register(new \Whale\Dict\DictServiceProvider(), array());
+//$app->register(new \Whale\Dict\DictServiceProvider(), array());
+
 $app->mount('/admin/page', new \Whale\Page\PageControllerProvider($app['page.service']));
 
 $app['logtime']('before user routes');

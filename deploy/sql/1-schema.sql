@@ -1,6 +1,9 @@
-DROP TABLE "area" CASCADE;
-DROP TABLE "floor" CASCADE;
-DROP TABLE "building" CASCADE;
+-- DROP TABLE "area" CASCADE;
+-- DROP TABLE "floor" CASCADE;
+-- DROP TABLE "building" CASCADE;
+
+DROP TABLE "dictionary" CASCADE;
+DROP TABLE "dictionary_entry" CASCADE;
 DROP TABLE "page" CASCADE;
 
 DROP FUNCTION get_calculated_page_node_path(param_page_id BIGINT) CASCADE;
@@ -33,18 +36,41 @@ CREATE TABLE "page" (
 );
 CREATE INDEX ON "page" USING GIST (path);
 
-CREATE TABLE "building" (
+CREATE TABLE "dictionary" (
+  "id" BIGSERIAL NOT NULL,
+
+  "name" VARCHAR (255) NOT NULL UNIQUE,
+  "title" VARCHAR (255) NOT NULL,
+  "content" TEXT,
+
   PRIMARY KEY("id")
-) INHERITS (page);
+);
+
+CREATE TABLE "dictionary_entry" (
+  "id" BIGSERIAL NOT NULL,
+
+  "id_dictionary" BIGSERIAL NOT NULL REFERENCES "dictionary_entry" (id),
+
+  "title" VARCHAR(255) NOT NULL,
+  "content" TEXT,
+
+  PRIMARY KEY("id")
+);
 
 
-CREATE TABLE "floor" (
-  PRIMARY KEY("id")
-) INHERITS (page);
 
-CREATE TABLE "area" (
-  PRIMARY KEY("id")
-) INHERITS (page);
+-- CREATE TABLE "building" (
+--   PRIMARY KEY("id")
+-- ) INHERITS (page);
+--
+--
+-- CREATE TABLE "floor" (
+--   PRIMARY KEY("id")
+-- ) INHERITS (page);
+--
+-- CREATE TABLE "area" (
+--   PRIMARY KEY("id")
+-- ) INHERITS (page);
 
 CREATE OR REPLACE FUNCTION urltranslit(text) RETURNS text as $$
 SELECT
@@ -128,26 +154,28 @@ LANGUAGE 'plpgsql' VOLATILE;
 CREATE TRIGGER trig_update_page_node_path AFTER INSERT OR UPDATE OF id, id_parent
 ON "page" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
 
-
-
-CREATE TRIGGER trig_update_building_node_path AFTER INSERT OR UPDATE OF id, id_parent
-ON "building" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
-
-CREATE TRIGGER trig_update_floor_node_path AFTER INSERT OR UPDATE OF id, id_parent
-ON "floor" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
-
-CREATE TRIGGER trig_update_area_node_path AFTER INSERT OR UPDATE OF id, id_parent
-ON "area" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
+-- CREATE TRIGGER trig_update_building_node_path AFTER INSERT OR UPDATE OF id, id_parent
+-- ON "building" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
+--
+-- CREATE TRIGGER trig_update_floor_node_path AFTER INSERT OR UPDATE OF id, id_parent
+-- ON "floor" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
+--
+-- CREATE TRIGGER trig_update_area_node_path AFTER INSERT OR UPDATE OF id, id_parent
+-- ON "area" FOR EACH ROW EXECUTE PROCEDURE trig_update_page_node_path();
 
 INSERT INTO "page" ("title", "name", "page_title", "page_url", "is_published") VALUES ('Главная', 'main', 'Главная', '', true);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Романов двор 1', true, 1);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Романов двор 2', true, 1);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Романов двор 3', true, 1);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Этаж 1', true, 2);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Этаж 2', true, 2);
+INSERT INTO "page" ("title", "is_published", "id_parent") VALUES ('Этаж 3', true, 2);
 
-INSERT INTO "building" ("title", "is_published", "id_parent") VALUES ('Романов двор 1', true, 1);
-INSERT INTO "building" ("title", "is_published", "id_parent") VALUES ('Романов двор 2', true, 1);
-INSERT INTO "building" ("title", "is_published", "id_parent") VALUES ('Романов двор 3', true, 1);
+INSERT INTO "dictionary" (title, name) VALUES ('Companions', 'companion');
+INSERT INTO "dictionary" (title, name) VALUES ('Opponents', 'opponent');
 
-
-
-INSERT INTO "floor" ("title", "is_published", "id_parent") VALUES ('Этаж 1', true, 2);
-INSERT INTO "floor" ("title", "is_published", "id_parent") VALUES ('Этаж 2', true, 2);
-INSERT INTO "floor" ("title", "is_published", "id_parent") VALUES ('Этаж 3', true, 2);
-
+INSERT INTO "dictionary_entry" (id_dictionary, title) VALUES ((SELECT id FROM "dictionary" WHERE name = 'companion'), 'Amy Pond');
+INSERT INTO "dictionary_entry" (id_dictionary, title) VALUES ((SELECT id FROM "dictionary" WHERE name = 'companion'), 'Rory Williams');
+INSERT INTO "dictionary_entry" (id_dictionary, title) VALUES ((SELECT id FROM "dictionary" WHERE name = 'companion'), 'Clara Oswald');
+INSERT INTO "dictionary_entry" (id_dictionary, title) VALUES ((SELECT id FROM "dictionary" WHERE name = 'opponent'), 'Cybermen');
+INSERT INTO "dictionary_entry" (id_dictionary, title) VALUES ((SELECT id FROM "dictionary" WHERE name = 'opponent'), 'Daleks');
