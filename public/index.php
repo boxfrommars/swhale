@@ -8,12 +8,15 @@ $startTime = microtime(true);
 $loader = require_once __DIR__ . '/../vendor/autoload.php';
 $config = require_once __DIR__ . '/../src/config.php';
 
-/** @var \Whale\WhaleApplication|\Doctrine\Common\Cache\Cache[]|\Whale\Page\PageService[]|\Symfony\Component\Form\FormFactory[]|Twig_Environment[] $app */
+/** @var \Whale\WhaleApplication|\Doctrine\DBAL\Connection[]|\Doctrine\Common\Cache\Cache[]|\Whale\Page\PageService[]|\Symfony\Component\Form\FormFactory[]|Twig_Environment[] $app */
 $app = new \Whale\WhaleApplication($config);
+
+$app->register(new \Whale\Db\Entity\DbContentEntryServiceProvider(), array());
 $app->register(new \Whale\Page\PageServiceProvider(), array());
-//$app->register(new \Whale\Dict\DictServiceProvider(), array());
+$app->register(new \Whale\Dictionary\DictionaryServiceProvider(), array());
 
 $app->mount('/admin/page', new \Whale\Page\PageControllerProvider($app['page.service']));
+$app->mount('/admin/dict', new \Whale\Db\DbControllerProvider($app['dict.entry_service']));
 
 $app['logtime']('before user routes');
 
