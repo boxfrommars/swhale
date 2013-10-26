@@ -16,7 +16,7 @@ $app->register(new \Whale\Page\PageServiceProvider(), array());
 $app->register(new \Whale\Dictionary\DictionaryServiceProvider(), array());
 
 $app->mount('/admin/page', new \Whale\Page\PageControllerProvider($app['page.service']));
-$app->mount('/admin/dict', new \Whale\Db\DbControllerProvider($app['dict.entry_service']));
+$app->mount('/admin/dict', new \Whale\Dictionary\DictionaryControllerProvider($app['dict.entry_service']));
 
 $app['logtime']('before user routes');
 
