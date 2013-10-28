@@ -22,6 +22,7 @@ $app['logtime']('before user routes');
 
 if ($app['is_cache'] && $app['cache']->contains('pages')) {
     $pages = $app['cache']->fetch('pages');
+    $app['logtime']('pages from cache');
 } else {
     $pages = $app['page.service']->fetchAll();
     if ($app['is_cache']) $app['cache']->save('pages', $pages);

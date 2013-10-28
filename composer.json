@@ -8,6 +8,7 @@
             "url": "https://github.com/boxfrommars/whale"
         }
     ],
+    "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
             "Romanov": "src/"
